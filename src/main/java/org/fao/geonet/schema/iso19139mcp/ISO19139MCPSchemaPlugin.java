@@ -13,8 +13,6 @@ import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 import org.jdom.xpath.XPath;
 
-import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -35,9 +33,10 @@ public class ISO19139MCPSchemaPlugin
     private static Map<String, Namespace> allTypenames;
     static {
         allNamespaces = ImmutableSet.<Namespace>builder()
-                .add(ISO19139Namespaces.GCO)
-                .add(ISO19139Namespaces.GMD)
-                .add(ISO19139Namespaces.SRV)
+                .add(ISO19139MCPNamespaces.GCO)
+                .add(ISO19139MCPNamespaces.GMD)
+                .add(ISO19139MCPNamespaces.SRV)
+                .add(ISO19139MCPNamespaces.GMX)
                 .add(ISO19139MCPNamespaces.MCP)
                 .build();
         allTypenames = ImmutableMap.<String, Namespace>builder()
@@ -74,17 +73,17 @@ public class ISO19139MCPSchemaPlugin
                 try {
                     if (o instanceof Element) {
                         Element sib = (Element) o;
-                        Element agId = (Element) sib.getChild("aggregateDataSetIdentifier", ISO19139Namespaces.GMD)
+                        Element agId = (Element) sib.getChild("aggregateDataSetIdentifier", ISO19139MCPNamespaces.GMD)
                                 .getChildren().get(0);
-                        String sibUuid = getChild(agId, "code", ISO19139Namespaces.GMD)
-                                .getChildText("CharacterString", ISO19139Namespaces.GCO);
-                        final Element associationTypeEl = getChild(sib, "associationType", ISO19139Namespaces.GMD);
-                        String associationType = getChild(associationTypeEl, "DS_AssociationTypeCode", ISO19139Namespaces.GMD)
+                        String sibUuid = getChild(agId, "code", ISO19139MCPNamespaces.GMD)
+                                .getChildText("CharacterString", ISO19139MCPNamespaces.GCO);
+                        final Element associationTypeEl = getChild(sib, "associationType", ISO19139MCPNamespaces.GMD);
+                        String associationType = getChild(associationTypeEl, "DS_AssociationTypeCode", ISO19139MCPNamespaces.GMD)
                                 .getAttributeValue("codeListValue");
-                        final Element initiativeTypeEl = getChild(sib, "initiativeType", ISO19139Namespaces.GMD);
+                        final Element initiativeTypeEl = getChild(sib, "initiativeType", ISO19139MCPNamespaces.GMD);
                         String initiativeType = "";
                         if (initiativeTypeEl != null) {
-                            initiativeType = getChild(initiativeTypeEl, "DS_InitiativeTypeCode", ISO19139Namespaces.GMD)
+                            initiativeType = getChild(initiativeTypeEl, "DS_InitiativeTypeCode", ISO19139MCPNamespaces.GMD)
                                     .getAttributeValue("codeListValue");
                         }
                         AssociatedResource resource = new AssociatedResource(sibUuid, initiativeType, associationType);
@@ -110,24 +109,24 @@ public class ISO19139MCPSchemaPlugin
 
     @Override
     public Set<String> getAssociatedParentUUIDs(Element metadata) {
-        ElementFilter elementFilter = new ElementFilter("parentIdentifier", ISO19139Namespaces.GMD);
+        ElementFilter elementFilter = new ElementFilter("parentIdentifier", ISO19139MCPNamespaces.GMD);
         return Xml.filterElementValues(
                 metadata,
                 elementFilter,
-                "CharacterString", ISO19139Namespaces.GCO,
+                "CharacterString", ISO19139MCPNamespaces.GCO,
                 null);
     }
 
     public Set<String> getAssociatedDatasetUUIDs(Element metadata) {
-        return getAttributeUuidrefValues(metadata, "operatesOn", ISO19139Namespaces.SRV);
+        return getAttributeUuidrefValues(metadata, "operatesOn", ISO19139MCPNamespaces.SRV);
     }
 
     public Set<String> getAssociatedFeatureCatalogueUUIDs(Element metadata) {
-        return getAttributeUuidrefValues(metadata, "featureCatalogueCitation", ISO19139Namespaces.GMD);
+        return getAttributeUuidrefValues(metadata, "featureCatalogueCitation", ISO19139MCPNamespaces.GMD);
     }
 
     public Set<String> getAssociatedSourceUUIDs(Element metadata) {
-        return getAttributeUuidrefValues(metadata, "source", ISO19139Namespaces.GMD);
+        return getAttributeUuidrefValues(metadata, "source", ISO19139MCPNamespaces.GMD);
     }
 
     private Set<String> getAttributeUuidrefValues(Element metadata, String tagName, Namespace namespace) {
@@ -181,16 +180,16 @@ public class ISO19139MCPSchemaPlugin
                 Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance"));
 
         // Create a new translation for the language
-        Element langElem = new Element("LocalisedCharacterString", ISO19139Namespaces.GMD);
+        Element langElem = new Element("LocalisedCharacterString", ISO19139MCPNamespaces.GMD);
         langElem.setAttribute("locale", "#" + languageIdentifier);
         langElem.setText(value);
-        Element textGroupElement = new Element("textGroup", ISO19139Namespaces.GMD);
+        Element textGroupElement = new Element("textGroup", ISO19139MCPNamespaces.GMD);
         textGroupElement.addContent(langElem);
 
         // Get the PT_FreeText node where to insert the translation into
-        Element freeTextElement = element.getChild("PT_FreeText", ISO19139Namespaces.GMD);
+        Element freeTextElement = element.getChild("PT_FreeText", ISO19139MCPNamespaces.GMD);
         if (freeTextElement == null) {
-            freeTextElement = new Element("PT_FreeText", ISO19139Namespaces.GMD);
+            freeTextElement = new Element("PT_FreeText", ISO19139MCPNamespaces.GMD);
             element.addContent(freeTextElement);
         }
         freeTextElement.addContent(textGroupElement);
@@ -203,7 +202,7 @@ public class ISO19139MCPSchemaPlugin
 
     @Override
     public Element createBasicTypeCharacterString() {
-        return new Element("CharacterString", ISO19139Namespaces.GCO);
+        return new Element("CharacterString", ISO19139MCPNamespaces.GCO);
     }
 
     @Override
