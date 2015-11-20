@@ -14,8 +14,10 @@
 			xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 			exclude-result-prefixes="gmd gmx gco gml srv geonet mcp app xlink ibis xsl">
 
-
 	<xsl:import href="../iso19139/index-fields/default.xsl"/>
+
+	<xsl:include href="../iso19139/convert/function.xsl" />
+
 
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -     
 	     This template matches 
