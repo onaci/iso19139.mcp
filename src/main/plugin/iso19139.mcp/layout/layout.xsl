@@ -89,7 +89,7 @@
     <geonet:attribute name="codeSpace" add="true"/>
   
   -->
-  <xsl:template mode="mode-iso19139" priority="30000" match="*[*/@codeList and $schema='iso19139.mcp']">
+  <xsl:template mode="mode-iso19139" priority="30000" match="*[*/@codeList and $schema='iso19139.mcp' and name()!='gmd:dateType']">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
     <xsl:param name="codelists" select="$iso19139.mcpcodelists" required="no"/>
