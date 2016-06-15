@@ -88,39 +88,42 @@
       select="mcp:imageLink/gmd:URL"/>
     <xsl:variable name="licenseName"
       select="mcp:licenseName/gco:CharacterString"/>
+    <xsl:variable name="attributionConstraint"
+      select="mcp:attributionConstraints/gco:CharacterString"/>
+    <xsl:variable name="derivativeConstraint"
+      select="mcp:derivativeConstraints/gco:CharacterString"/>
+    <xsl:variable name="commercialUseConstraint"
+      select="mcp:commercialUseConstraints/gco:CharacterString"/>
 
 
     <xsl:variable name="parentName" select="name(..)"/>
-
-    <!-- Create custom widget: 
-              * '' for item selector, 
-              * 'tagsinput' for tags
-              * 'tagsinput' and maxTags = 1 for only one tag
-              * 'multiplelist' for multiple selection list
-    -->
-    <xsl:variable name="widgetMode" select="'tagsinput'"/>
-    <xsl:variable name="maxTags" select="'1'"/>
 
 		<div>
 		 	<label class="col-sm-2 control-label" data-gn-field-tooltip="{$schema}|{name()}|{name(..)}|"><xsl:value-of select="gn-fn-metadata:getLabel($schema, name(), $labels)/label"/></label>
 		</div>
     <!-- Create a div with the angular directive configuration
-            * widgetMode: the layout to use
             * elementRef: the element ref to edit
             * jurisdictionUrl: current jurisdiction
             * namespace: current mcp namespace
             * licenseName: current license name
             * licenseUrl: current license url
             * licenseImageUrl: current license image url
+            * attributionConstraint: current attribution constraint
+            * derivativeConstraint: current derivative constraint
+            * commercialUseConstraint: current commercial use constraint
      -->
-    <div data-gn-commons-jurisdiction-selector="{$widgetMode}"
+    <div data-gn-commons-jurisdiction-selector=""
           data-metadata-id="{$metadataId}"
           data-element-ref="{../gn:element/@ref}"
           data-jurisdiction-url="{$jurisdictionUrl}"
           data-namespace="{namespace-uri()}"
           data-license-name="{$licenseName}"
           data-license-url="{$licenseUrl}"
-          data-license-image-url="{$licenseImageUrl}">
+          data-license-image-url="{$licenseImageUrl}"
+          data-attribution-constraint="{$attributionConstraint}"
+          data-derivative-constraint="{$derivativeConstraint}"
+          data-commercial-use-constraint="{$commercialUseConstraint}"
+					>
 		</div>
 
   </xsl:template>
